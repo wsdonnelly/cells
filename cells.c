@@ -4,10 +4,12 @@ int main(void)
 {
 	char	command;
 	int		rule_arr[8] = {0};
+	term_size t_size;
 
-	do{
+	do {
+		get_size(&t_size);
 		get_rule(rule_arr);
-		generate(rule_arr);
+		generate(rule_arr, &t_size);
 		printf("Run again? (y/n): ");
 		scanf(" %c", &command);
 		printf("\n");
@@ -16,12 +18,25 @@ int main(void)
 	return 0;
 }
 
-void	generate(int rule_arr[8]){
+void get_size(term_size *t_size)
+{
+	struct winsize w;
+	ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
+	t_size->rows = w.ws_row;
+	t_size->cols = w.ws_col;
+}
 
-	int	current_line[WIDTH] = { [WIDTH / 2] = 1};
-	int	next_line[WIDTH] = {0};
+void	generate(int *rule_arr, term_size *t_size)
+{
+
+	int WIDTH = (t_size->cols / 3) * 3;
+	int END = t_size->rows;
+	int	current_line[WIDTH];
+	int	next_line[WIDTH];
 	int	count;
 
+	printf("WIDTH is %d\n", WIDTH);
+	printf("HEIGHT is %d\n", END);
 	count = 0;
 	while (count < END)
 	{
