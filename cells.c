@@ -2,47 +2,68 @@
 
 int main(void)
 {
-	char	command;
-	int		rule_arr[8] = {0};
-	term_size t_size;
+	char		command;
+	char		c = 'X';
+	int			rule_arr[8] = {0};
+	int			flag;
+	term_size	t_size;
+
+	srand(time(0));
 
 	do {
+		flag = 0;
 		get_size(&t_size);
 		get_rule(rule_arr);
-		generate(rule_arr, &t_size);
-		printf("Run again? (y/n): ");
+		generate(rule_arr, &t_size, c);
+		printf("Run again? (y/n)  or change char? (c): ");
 		scanf(" %c", &command);
+		
+		if (command == 'c' || command == 'C')
+		{
+			c = change_char();
+			flag = 1;
+		}
 		printf("\n");
-	} while (command == 'y' || command == 'Y');
+	} while (command == 'y' || command == 'Y' || flag == 1);
 
 	return 0;
 }
 
-void get_size(term_size *t_size)
+char change_char(void)
 {
-	struct winsize w;
-	ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
-	t_size->rows = w.ws_row;
-	t_size->cols = w.ws_col;
+	char c;
+	fflush(0);
+	printf("Enter a new char: ");
+	c = getchar();
+	fflush(0);
+	return c;
 }
 
-void	generate(int *rule_arr, term_size *t_size)
+void get_size(term_size *t_size)
+{
+	
+	struct winsize w;
+	ioctl(1 , TIOCGWINSZ, &w);
+	t_size->rows = w.ws_row;
+	t_size->cols = w.ws_col;
+
+}
+
+void	generate(int *rule_arr, term_size *t_size, char c)
 {
 
-	int WIDTH = (t_size->cols / 3) * 3;
-	int END = t_size->rows;
-	int	current_line[WIDTH];
-	int	next_line[WIDTH];
+	int cols = (t_size->cols / 3) * 3;
+	int rows = t_size->rows;
+	int	current_line [cols];
+	int	next_line [cols];
 	int	count;
 
-	printf("WIDTH is %d\n", WIDTH);
-	printf("HEIGHT is %d\n", END);
 	count = 0;
-	while (count < END)
+	while (count < rows)
 	{
-		print_line(current_line, WIDTH);
+		print_line(current_line, cols, c);
 		//checker zone then LOGIC
-		for (int i = 0; i <= WIDTH - 3; ++i)
+		for (int i = 0; i <= cols - 3; ++i)
 		{
 			if (current_line[i] == 1)
 			{
@@ -86,7 +107,7 @@ void	generate(int *rule_arr, term_size *t_size)
 			continue;
 		}
         //copy and replace next_line to current_line
-		for (int i = 0; i < WIDTH; ++i)
+		for (int i = 0; i < cols; ++i)
 			current_line[i] = next_line[i];
 		++count;
 	}
@@ -98,7 +119,6 @@ int		get_rule(int *rule_arr)
 	int	num;
 	int	i;
 
-	srand(time(0));
 	num = rand() % 256;
 	val = num;
 	i = 0;
@@ -111,12 +131,9 @@ int		get_rule(int *rule_arr)
 	return num;
 }
 
-void	print_line(int arr[], int width)
+void	print_line(int *arr, int cols, char c)
 {
-	char	c;
-
-	c = '@'; //user input this char
-	for (int i = 0; i < width; ++i)
+	for (int i = 0; i < cols; ++i)
 	{
 		if(arr[i] == 1)
 			printf("%c", c);
