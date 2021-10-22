@@ -3,7 +3,7 @@
 int	main(void)
 {
 	char		command;
-	char		c = 'X';
+	char		c = 'O';
 	int			rule_arr[8] = {0};
 	int			flag;
 	term_size	t_size;

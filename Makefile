@@ -1,4 +1,3 @@
-
 CC = gcc
 NAME = cells
 SOURCES = sources/*.c
