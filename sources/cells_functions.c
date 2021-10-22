@@ -40,7 +40,7 @@ int			get_rule(int *rule_arr)
 
 void		print_line(int *arr, int cols, char c)
 {
-	for (int i = 0; i < cols; ++i)
+	for (int i = 0; i < cols; i++)
 	{
 		if(arr[i] == 1)
 			printf("%c", c);

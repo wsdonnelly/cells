@@ -9,16 +9,16 @@ void	generate(int *rule_arr, term_size *t_size, char c)
 	int	*current_line;
 	int	*next_line;
 	int	count;
-	int check = 0;
+	int check;
 	
 
 	current_line = (int*)malloc(sizeof(int) * cols);
 	next_line = (int*)malloc(sizeof(int) * cols);
 	count = 0;
-
-	//while (count < rows || check != cols)
+	check = 0;
+	//while (count < rows) fill screen
 	while (check != cols && count < 800)
-	//while(count >= 0)
+	//while(count >= 0) infinite loop
 	{
 		print_line(current_line, cols, c);
 		for (int i = 0; i <= cols - 3; i++)
